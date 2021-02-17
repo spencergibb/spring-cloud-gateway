@@ -27,10 +27,9 @@ import reactor.netty.http.client.HttpClientResponse;
 import reactor.netty.resources.ConnectionProvider;
 
 import org.springframework.cloud.gateway.fn.core.AbstractProxyHandlerFunction;
+import org.springframework.cloud.gateway.fn.core.ServerRequestAdapter;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
-import org.springframework.core.io.buffer.DefaultDataBufferFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.servlet.function.HandlerFunction;
 import org.springframework.web.servlet.function.ServerRequest;
@@ -58,24 +57,8 @@ public abstract class HandlerFunctions {
 		}
 
 		@Override
-		protected URI uri(ServerRequest serverRequest) {
-			return serverRequest.uri();
-		}
-
-		@Override
-		protected HttpHeaders httpHeaders(ServerRequest serverRequest) {
-			return serverRequest.headers().asHttpHeaders();
-		}
-
-		@Override
-		protected String methodName(ServerRequest serverRequest) {
-			return serverRequest.methodName();
-		}
-
-		@Override
-		protected Flux<DataBuffer> body(ServerRequest serverRequest) {
-			return DataBufferUtils.readInputStream(serverRequest.servletRequest()::getInputStream,
-					DefaultDataBufferFactory.sharedInstance, 4096);
+		protected ServerRequestAdapter<ServerRequest> adapt(ServerRequest request) {
+			return new WebmvcServerRequestAdapter(request);
 		}
 
 		@Override
