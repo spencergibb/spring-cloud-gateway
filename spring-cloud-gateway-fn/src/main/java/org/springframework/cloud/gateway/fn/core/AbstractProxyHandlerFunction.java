@@ -52,27 +52,22 @@ public abstract class AbstractProxyHandlerFunction<REQUEST, RESPONSE> {
 		this.uri = uri;
 	}
 
-	protected abstract URI uri(REQUEST request);
-
-	protected abstract HttpHeaders httpHeaders(REQUEST request);
-
-	protected abstract String methodName(REQUEST request);
-
-	protected abstract Flux<DataBuffer> body(REQUEST request);
+	protected abstract ServerRequestAdapter<REQUEST> adapt(REQUEST request);
 
 	protected abstract Mono<RESPONSE> response(HttpClientResponse res, Flux<DataBuffer> body);
 
-	protected Flux<RESPONSE> doHandle(REQUEST request) {
+	protected Flux<RESPONSE> doHandle(REQUEST originialRequest) {
+		ServerRequestAdapter<REQUEST> request = adapt(originialRequest);
 		// See RouteToRequestUrlFilter
-		boolean encoded = containsEncodedQuery(uri(request));
-		URI url = UriComponentsBuilder.fromUri(uri(request))
+		boolean encoded = containsEncodedQuery(request.uri());
+		URI url = UriComponentsBuilder.fromUri(request.uri())
 				// .uri(routeUri)
 				.scheme(uri.getScheme()).host(uri.getHost()).port(uri.getPort()).build(encoded).toUri();
 
 		// See NettyRoutingFilter
 		final DefaultHttpHeaders httpHeaders = new DefaultHttpHeaders();
-		httpHeaders(request).forEach(httpHeaders::set);
-		HttpMethod method = HttpMethod.valueOf(methodName(request));
+		request.httpHeaders().forEach(httpHeaders::set);
+		HttpMethod method = HttpMethod.valueOf(request.methodName());
 
 		Flux<RESPONSE> responseFlux = httpClient.headers(headers -> {
 			headers.add(httpHeaders);
@@ -92,7 +87,7 @@ public abstract class AbstractProxyHandlerFunction<REQUEST, RESPONSE> {
 				 */
 			}
 			try {
-				return nettyOutbound.send(body(request).map(AbstractProxyHandlerFunction::getByteBuf));
+				return nettyOutbound.send(request.body().map(AbstractProxyHandlerFunction::getByteBuf));
 			}
 			catch (Exception e) {
 				ReflectionUtils.rethrowRuntimeException(e);

@@ -28,6 +28,7 @@ import reactor.netty.http.client.HttpClientResponse;
 import reactor.netty.resources.ConnectionProvider;
 
 import org.springframework.cloud.gateway.fn.core.AbstractProxyHandlerFunction;
+import org.springframework.cloud.gateway.fn.core.ServerRequestAdapter;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -101,23 +102,8 @@ public abstract class HandlerFunctions {
 		}
 
 		@Override
-		protected URI uri(ServerRequest request) {
-			return request.uri();
-		}
-
-		@Override
-		protected HttpHeaders httpHeaders(ServerRequest request) {
-			return request.headers().asHttpHeaders();
-		}
-
-		@Override
-		protected String methodName(ServerRequest request) {
-			return request.methodName();
-		}
-
-		@Override
-		protected Flux<DataBuffer> body(ServerRequest request) {
-			return request.bodyToFlux(DataBuffer.class);
+		protected ServerRequestAdapter<ServerRequest> adapt(ServerRequest request) {
+			return new WebfluxServerRequestAdapter(request);
 		}
 
 		@Override
