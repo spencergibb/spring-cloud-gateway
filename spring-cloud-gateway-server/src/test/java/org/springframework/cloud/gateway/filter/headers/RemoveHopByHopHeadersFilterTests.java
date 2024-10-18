@@ -79,7 +79,8 @@ public class RemoveHopByHopHeadersFilterTests {
 
 		String arbitraryConnectionOption = "xyz";
 		assumeThat(HEADERS_REMOVED_ON_REQUEST).doesNotContain(arbitraryConnectionOption);
-		builder.header(HttpHeaders.CONNECTION, "upgrade", "keep-alive", arbitraryConnectionOption.toUpperCase(Locale.ROOT));
+		builder.header(HttpHeaders.CONNECTION, "upgrade", "keep-alive",
+				arbitraryConnectionOption.toUpperCase(Locale.ROOT));
 		builder.header(HttpHeaders.UPGRADE, "WebSocket");
 		builder.header("Keep-Alive", "timeout=5");
 		builder.header(arbitraryConnectionOption, "");

@@ -21,20 +21,47 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.atomic.AtomicReference;
 
 import jakarta.servlet.ServletException;
 
+import org.springframework.cloud.function.context.FunctionCatalog;
+import org.springframework.cloud.function.context.catalog.SimpleFunctionRegistry.FunctionInvocationWrapper;
 import org.springframework.cloud.gateway.server.mvc.common.MvcUtils;
 import org.springframework.cloud.gateway.server.mvc.config.RouteProperties;
+import org.springframework.util.MimeType;
 import org.springframework.web.servlet.function.HandlerFunction;
 import org.springframework.web.servlet.function.ServerRequest;
 import org.springframework.web.servlet.function.ServerResponse;
+
+import static org.springframework.cloud.gateway.server.mvc.handler.FunctionHandlerRequestProcessingHelper.processRequest;
 
 public abstract class HandlerFunctions {
 
 	private HandlerFunctions() {
 
+	}
+
+	public static HandlerFunction<ServerResponse> fn(String functionName) {
+		return request -> {
+			FunctionCatalog functionCatalog = MvcUtils.getApplicationContext(request).getBean(FunctionCatalog.class);
+			FunctionInvocationWrapper function = functionCatalog.lookup(functionName,
+					request.headers().accept().stream().map(MimeType::toString).toArray(String[]::new));
+			if (function != null) {
+				Object body = request.body(function.getRawInputType());
+				return processRequest(request, function, body, false, Collections.emptyList(), Collections.emptyList());
+				// FunctionWebRequestProcessingHelper
+				/*
+				 * Object result =
+				 * function.apply(request.body(function.getRawInputType())); if (result
+				 * instanceof Message<?> message) { return
+				 * ServerResponse.ok().body(message.getPayload()); } return
+				 * ServerResponse.ok().body(result);
+				 */
+			}
+			return ServerResponse.notFound().build();
+		};
 	}
 
 	public static HandlerFunction<ServerResponse> forward(RouteProperties routeProperties) {
