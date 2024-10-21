@@ -57,6 +57,11 @@
 			<artifactId>spring-cloud-function-context</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-stream</artifactId>
+			<optional>true</optional>
+		</dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-loadbalancer</artifactId>
@@ -95,11 +100,21 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-testcontainers</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-stream-rabbit</artifactId>
 			<scope>test</scope>
 		</dependency>
         <!-- Third party test dependencies -->
+		<dependency>
+			<groupId>org.awaitility</groupId>
+			<artifactId>awaitility</artifactId>
+			<scope>test</scope>
+		</dependency>
         <dependency>
             <groupId>com.bucket4j</groupId>
             <artifactId>bucket4j-caffeine</artifactId>
@@ -115,5 +130,10 @@
             <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>rabbitmq</artifactId>
+			<scope>test</scope>
+		</dependency>
     </dependencies>
 </project>

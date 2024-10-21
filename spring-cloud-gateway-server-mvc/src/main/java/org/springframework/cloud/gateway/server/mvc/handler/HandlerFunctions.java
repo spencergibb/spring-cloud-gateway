@@ -30,6 +30,10 @@ import org.springframework.cloud.function.context.FunctionCatalog;
 import org.springframework.cloud.function.context.catalog.SimpleFunctionRegistry.FunctionInvocationWrapper;
 import org.springframework.cloud.gateway.server.mvc.common.MvcUtils;
 import org.springframework.cloud.gateway.server.mvc.config.RouteProperties;
+import org.springframework.cloud.stream.function.StreamOperations;
+import org.springframework.messaging.MessageHeaders;
+import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.util.Assert;
 import org.springframework.util.MimeType;
 import org.springframework.web.servlet.function.HandlerFunction;
 import org.springframework.web.servlet.function.ServerRequest;
@@ -44,6 +48,7 @@ public abstract class HandlerFunctions {
 	}
 
 	public static HandlerFunction<ServerResponse> fn(String functionName) {
+		Assert.hasText(functionName, "'functionName' must not be empty");
 		return request -> {
 			FunctionCatalog functionCatalog = MvcUtils.getApplicationContext(request).getBean(FunctionCatalog.class);
 			FunctionInvocationWrapper function = functionCatalog.lookup(functionName,
@@ -61,6 +66,21 @@ public abstract class HandlerFunctions {
 				 */
 			}
 			return ServerResponse.notFound().build();
+		};
+	}
+
+	public static HandlerFunction<ServerResponse> stream(String bindingName) {
+		Assert.hasText(bindingName, "'bindingName' must not be empty");
+		// TODO: validate bindingName
+		return request -> {
+			StreamOperations streamOps = MvcUtils.getApplicationContext(request).getBean(StreamOperations.class);
+			byte[] body = request.body(byte[].class);
+			MessageHeaders messageHeaders = FunctionHandlerHeaderUtils.fromHttp(FunctionHandlerHeaderUtils.sanitize(request.headers().asHttpHeaders()));
+			boolean send = streamOps.send(bindingName, MessageBuilder.createMessage(body, messageHeaders));
+			if (send) {
+				return ServerResponse.accepted().build();
+			}
+			return ServerResponse.badRequest().build();
 		};
 	}
 
