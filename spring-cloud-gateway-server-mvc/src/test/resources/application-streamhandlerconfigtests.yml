@@ -1,0 +1,16 @@
+spring.cloud.gateway.mvc:
+  routesMap:
+    testsimplestream:
+      uri: stream:hello-out-0
+      predicates:
+        - Path=/simplestream
+        - Method=POST
+    testtemplatedstream:
+      uri: stream:{name}-out-0
+      predicates:
+        - Path=/templatedstream/{name}
+        - Method=POST
+
+logging:
+  level:
+    org.springframework.cloud.gateway.server.mvc: TRACE

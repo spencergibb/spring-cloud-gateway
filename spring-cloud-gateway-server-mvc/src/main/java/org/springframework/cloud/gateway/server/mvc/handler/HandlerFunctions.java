@@ -47,6 +47,12 @@ public abstract class HandlerFunctions {
 
 	}
 
+	// for properties
+	public static HandlerFunction<ServerResponse> fn(RouteProperties routeProperties) {
+		// fn:fnName
+		return fn(routeProperties.getUri().getSchemeSpecificPart());
+	}
+
 	public static HandlerFunction<ServerResponse> fn(String functionName) {
 		Assert.hasText(functionName, "'functionName' must not be empty");
 		return request -> {
@@ -60,6 +66,12 @@ public abstract class HandlerFunctions {
 			}
 			return ServerResponse.notFound().build();
 		};
+	}
+
+	// for properties
+	public static HandlerFunction<ServerResponse> stream(RouteProperties routeProperties) {
+		// stream:bindingName
+		return stream(routeProperties.getUri().getSchemeSpecificPart());
 	}
 
 	public static HandlerFunction<ServerResponse> stream(String bindingName) {
@@ -79,6 +91,7 @@ public abstract class HandlerFunctions {
 		};
 	}
 
+	// for properties
 	public static HandlerFunction<ServerResponse> forward(RouteProperties routeProperties) {
 		return forward(routeProperties.getUri().getPath());
 	}

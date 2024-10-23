@@ -1,0 +1,16 @@
+spring.cloud.gateway.mvc:
+  routesMap:
+    testsimplefunction:
+      uri: fn:upper
+      predicates:
+        - Path=/simplefunction
+        - Method=POST
+    testtemplatedfunction:
+      uri: fn:{fnName}
+      predicates:
+        - Path=/templatedfunction/{fnName}
+        - Method=POST
+
+logging:
+  level:
+    org.springframework.cloud.gateway.server.mvc: TRACE
