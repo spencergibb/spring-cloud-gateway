@@ -57,6 +57,7 @@ public class StreamHandlerTests {
 
 	@Test
 	public void testSimpleStreamWorks() {
+		helloConsumed.set(false);
 		restClient.post()
 			.uri("/simplestream")
 			.accept(MediaType.TEXT_PLAIN)
@@ -64,6 +65,21 @@ public class StreamHandlerTests {
 			.exchange()
 			.expectStatus()
 			.isAccepted();
+
+		Awaitility.await().atMost(5, TimeUnit.SECONDS).until(() -> helloConsumed.get());
+		assertThat(helloConsumed).isTrue();
+	}
+
+	@Test
+	public void testTemplatedStreamWorks() {
+		helloConsumed.set(false);
+		restClient.post()
+				.uri("/templatedstream/hello")
+				.accept(MediaType.TEXT_PLAIN)
+				.bodyValue("hello")
+				.exchange()
+				.expectStatus()
+				.isAccepted();
 
 		Awaitility.await().atMost(5, TimeUnit.SECONDS).until(() -> helloConsumed.get());
 		assertThat(helloConsumed).isTrue();
@@ -78,7 +94,10 @@ public class StreamHandlerTests {
 			// @formatter:off
 			return route("testsimplestream")
 					.POST("/simplestream", stream("hello-out-0"))
-					.build();
+					.build()
+				.and(route("testtemplatedstream")
+					.POST("/templatedstream/{name}", stream("{name}-out-0"))
+					.build());
 			// @formatter:on
 		}
 

@@ -53,6 +53,19 @@ public class FunctionHandlerTests {
 			.isEqualTo("HELLO");
 	}
 
+	@Test
+	public void testTemplatedFunctionWorks() {
+		restClient.post()
+				.uri("/templatedfunction/upper")
+				.accept(MediaType.TEXT_PLAIN)
+				.bodyValue("hello")
+				.exchange()
+				.expectStatus()
+				.isOk()
+				.expectBody(String.class)
+				.isEqualTo("HELLO");
+	}
+
 	@SpringBootConfiguration
 	@EnableAutoConfiguration
 	protected static class TestConfiguration {
@@ -67,7 +80,10 @@ public class FunctionHandlerTests {
 			// @formatter:off
 			return route("testsimplefunction")
 					.POST("/simplefunction", fn("upper"))
-					.build();
+					.build()
+				.and(route("testtemplatedfunction")
+					.POST("/templatedfunction/{fnName}", fn("{fnName}"))
+					.build());
 			// @formatter:on
 		}
 
