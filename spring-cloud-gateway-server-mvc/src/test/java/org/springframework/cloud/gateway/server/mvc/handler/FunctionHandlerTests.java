@@ -56,14 +56,14 @@ public class FunctionHandlerTests {
 	@Test
 	public void testTemplatedFunctionWorks() {
 		restClient.post()
-				.uri("/templatedfunction/upper")
-				.accept(MediaType.TEXT_PLAIN)
-				.bodyValue("hello")
-				.exchange()
-				.expectStatus()
-				.isOk()
-				.expectBody(String.class)
-				.isEqualTo("HELLO");
+			.uri("/templatedfunction/upper")
+			.accept(MediaType.TEXT_PLAIN)
+			.bodyValue("hello")
+			.exchange()
+			.expectStatus()
+			.isOk()
+			.expectBody(String.class)
+			.isEqualTo("HELLO");
 	}
 
 	@SpringBootConfiguration
