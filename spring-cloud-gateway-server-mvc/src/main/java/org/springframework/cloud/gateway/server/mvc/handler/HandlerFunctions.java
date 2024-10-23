@@ -57,14 +57,6 @@ public abstract class HandlerFunctions {
 			if (function != null) {
 				Object body = request.body(function.getRawInputType());
 				return processRequest(request, function, body, false, Collections.emptyList(), Collections.emptyList());
-				// FunctionWebRequestProcessingHelper
-				/*
-				 * Object result =
-				 * function.apply(request.body(function.getRawInputType())); if (result
-				 * instanceof Message<?> message) { return
-				 * ServerResponse.ok().body(message.getPayload()); } return
-				 * ServerResponse.ok().body(result);
-				 */
 			}
 			return ServerResponse.notFound().build();
 		};
@@ -77,7 +69,8 @@ public abstract class HandlerFunctions {
 			String expandedBindingName = MvcUtils.expand(request, bindingName);
 			StreamOperations streamOps = MvcUtils.getApplicationContext(request).getBean(StreamOperations.class);
 			byte[] body = request.body(byte[].class);
-			MessageHeaders messageHeaders = FunctionHandlerHeaderUtils.fromHttp(FunctionHandlerHeaderUtils.sanitize(request.headers().asHttpHeaders()));
+			MessageHeaders messageHeaders = FunctionHandlerHeaderUtils
+				.fromHttp(FunctionHandlerHeaderUtils.sanitize(request.headers().asHttpHeaders()));
 			boolean send = streamOps.send(expandedBindingName, MessageBuilder.createMessage(body, messageHeaders));
 			if (send) {
 				return ServerResponse.accepted().build();

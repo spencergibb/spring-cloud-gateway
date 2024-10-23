@@ -41,7 +41,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.cloud.gateway.server.mvc.handler.GatewayRouterFunctions.route;
 import static org.springframework.cloud.gateway.server.mvc.handler.HandlerFunctions.stream;
 
-@SpringBootTest(properties = {"spring.cloud.function.definition=consumeHello", "spring.cloud.stream.bindings.consumeHello-in-0.destination=hello-out-0"}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+		properties = { "spring.cloud.function.definition=consumeHello",
+				"spring.cloud.stream.bindings.consumeHello-in-0.destination=hello-out-0" },
+		webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
 public class StreamHandlerTests {
 
@@ -74,12 +77,12 @@ public class StreamHandlerTests {
 	public void testTemplatedStreamWorks() {
 		helloConsumed.set(false);
 		restClient.post()
-				.uri("/templatedstream/hello")
-				.accept(MediaType.TEXT_PLAIN)
-				.bodyValue("hello")
-				.exchange()
-				.expectStatus()
-				.isAccepted();
+			.uri("/templatedstream/hello")
+			.accept(MediaType.TEXT_PLAIN)
+			.bodyValue("hello")
+			.exchange()
+			.expectStatus()
+			.isAccepted();
 
 		Awaitility.await().atMost(5, TimeUnit.SECONDS).until(() -> helloConsumed.get());
 		assertThat(helloConsumed).isTrue();
