@@ -50,8 +50,9 @@ public abstract class HandlerFunctions {
 	public static HandlerFunction<ServerResponse> fn(String functionName) {
 		Assert.hasText(functionName, "'functionName' must not be empty");
 		return request -> {
+			String expandedFunctionName = MvcUtils.expand(request, functionName);
 			FunctionCatalog functionCatalog = MvcUtils.getApplicationContext(request).getBean(FunctionCatalog.class);
-			FunctionInvocationWrapper function = functionCatalog.lookup(functionName,
+			FunctionInvocationWrapper function = functionCatalog.lookup(expandedFunctionName,
 					request.headers().accept().stream().map(MimeType::toString).toArray(String[]::new));
 			if (function != null) {
 				Object body = request.body(function.getRawInputType());
@@ -73,10 +74,11 @@ public abstract class HandlerFunctions {
 		Assert.hasText(bindingName, "'bindingName' must not be empty");
 		// TODO: validate bindingName
 		return request -> {
+			String expandedBindingName = MvcUtils.expand(request, bindingName);
 			StreamOperations streamOps = MvcUtils.getApplicationContext(request).getBean(StreamOperations.class);
 			byte[] body = request.body(byte[].class);
 			MessageHeaders messageHeaders = FunctionHandlerHeaderUtils.fromHttp(FunctionHandlerHeaderUtils.sanitize(request.headers().asHttpHeaders()));
-			boolean send = streamOps.send(bindingName, MessageBuilder.createMessage(body, messageHeaders));
+			boolean send = streamOps.send(expandedBindingName, MessageBuilder.createMessage(body, messageHeaders));
 			if (send) {
 				return ServerResponse.accepted().build();
 			}
