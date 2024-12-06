@@ -2,6 +2,7 @@ org.springframework.cloud.gateway.config.GatewayClassPathWarningAutoConfiguratio
 org.springframework.cloud.gateway.config.GatewayAutoConfiguration
 org.springframework.cloud.gateway.config.GatewayResilience4JCircuitBreakerAutoConfiguration
 org.springframework.cloud.gateway.config.GatewayNoLoadBalancerClientAutoConfiguration
+org.springframework.cloud.gateway.config.GatewayFunctionAutoConfiguration
 org.springframework.cloud.gateway.config.GatewayMetricsAutoConfiguration
 org.springframework.cloud.gateway.config.GatewayRedisAutoConfiguration
 org.springframework.cloud.gateway.discovery.GatewayDiscoveryClientAutoConfiguration
