@@ -17,12 +17,8 @@
 package org.springframework.cloud.gateway.filter;
 
 import java.net.URI;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -38,6 +34,7 @@ import org.springframework.cloud.function.context.catalog.SimpleFunctionRegistry
 import org.springframework.cloud.gateway.filter.factory.rewrite.CachedBodyOutputMessage;
 import org.springframework.cloud.gateway.filter.factory.rewrite.MessageBodyEncoder;
 import org.springframework.cloud.gateway.support.BodyInserterContext;
+import org.springframework.cloud.gateway.support.MessageHeaderUtils;
 import org.springframework.cloud.gateway.support.NotFoundException;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
@@ -48,7 +45,6 @@ import org.springframework.http.codec.HttpMessageReader;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.MimeType;
@@ -76,7 +72,7 @@ public class FunctionRoutingFilter implements GlobalFilter, Ordered {
 	private final Map<String, MessageBodyEncoder> messageBodyEncoders;
 
 	public FunctionRoutingFilter(FunctionCatalog functionCatalog, List<HttpMessageReader<?>> messageReaders,
-								 Set<MessageBodyEncoder> messageBodyEncoders) {
+			Set<MessageBodyEncoder> messageBodyEncoders) {
 		this.functionCatalog = functionCatalog;
 		this.messageReaders = messageReaders;
 		this.messageBodyEncoders = messageBodyEncoders.stream()
@@ -121,7 +117,7 @@ public class FunctionRoutingFilter implements GlobalFilter, Ordered {
 
 			MessageBuilder builder = MessageBuilder.withPayload(requestBody);
 			if (!CollectionUtils.isEmpty(request.getQueryParams())) {
-				builder = builder.setHeader(HeaderUtils.HTTP_REQUEST_PARAM,
+				builder = builder.setHeader(MessageHeaderUtils.HTTP_REQUEST_PARAM,
 						request.getQueryParams().toSingleValueMap());
 			}
 			inputMessage = builder.copyHeaders(headers.toSingleValueMap()).build();
@@ -135,7 +131,7 @@ public class FunctionRoutingFilter implements GlobalFilter, Ordered {
 
 			Object functionResult = function.apply(inputMessage);
 			if (functionResult instanceof Message message) {
-				newResponseHeaders.addAll(HeaderUtils.fromMessage(message.getHeaders(), ignoredHeaders));
+				newResponseHeaders.addAll(MessageHeaderUtils.fromMessage(message.getHeaders(), ignoredHeaders));
 				functionResult = message.getPayload();
 			}
 			Publisher result;
@@ -197,94 +193,6 @@ public class FunctionRoutingFilter implements GlobalFilter, Ordered {
 		}
 
 		return response;
-	}
-
-	/**
-	 * @author Dave Syer
-	 * @author Oleg Zhurakousky
-	 */
-	private static final class HeaderUtils {
-
-		/**
-		 * Message Header name which contains HTTP request parameters.
-		 */
-		public static final String HTTP_REQUEST_PARAM = "http_request_param";
-
-		private static HttpHeaders IGNORED = new HttpHeaders();
-
-		private static HttpHeaders REQUEST_ONLY = new HttpHeaders();
-
-		static {
-			IGNORED.add(MessageHeaders.ID, "");
-			IGNORED.add(HttpHeaders.CONTENT_LENGTH, "0");
-			// Headers that would typically be added by a downstream client
-			REQUEST_ONLY.add(HttpHeaders.ACCEPT, "");
-			REQUEST_ONLY.add(HttpHeaders.CONTENT_LENGTH, "");
-			REQUEST_ONLY.add(HttpHeaders.CONTENT_TYPE, "");
-			REQUEST_ONLY.add(HttpHeaders.HOST, "");
-		}
-
-		private HeaderUtils() {
-			throw new IllegalStateException("Can't instantiate a utility class");
-		}
-
-		public static HttpHeaders fromMessage(MessageHeaders headers, List<String> ignoredHeders) {
-			HttpHeaders result = new HttpHeaders();
-			for (String name : headers.keySet()) {
-				Object value = headers.get(name);
-				name = name.toLowerCase(Locale.ROOT);
-				if (!IGNORED.containsKey(name) && !ignoredHeders.contains(name)) {
-					Collection<?> values = multi(value);
-					for (Object object : values) {
-						result.set(name, object.toString());
-					}
-				}
-			}
-			return result;
-		}
-
-		@SuppressWarnings("unchecked")
-		public static HttpHeaders fromMessage(MessageHeaders headers) {
-			return fromMessage(headers, Collections.EMPTY_LIST);
-		}
-
-		public static HttpHeaders sanitize(HttpHeaders request, List<String> ignoredHeders,
-				List<String> requestOnlyHeaders) {
-			HttpHeaders result = new HttpHeaders();
-			for (String name : request.keySet()) {
-				List<String> value = request.get(name);
-				name = name.toLowerCase(Locale.ROOT);
-				if (!IGNORED.containsKey(name) && !REQUEST_ONLY.containsKey(name) && !ignoredHeders.contains(name)
-						&& !requestOnlyHeaders.contains(name)) {
-					result.put(name, value);
-				}
-			}
-			return result;
-		}
-
-		@SuppressWarnings("unchecked")
-		public static HttpHeaders sanitize(HttpHeaders request) {
-			return sanitize(request, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
-		}
-
-		public static MessageHeaders fromHttp(HttpHeaders headers) {
-			Map<String, Object> map = new LinkedHashMap<>();
-			for (String name : headers.keySet()) {
-				Collection<?> values = multi(headers.get(name));
-				name = name.toLowerCase(Locale.ROOT);
-				Object value = values == null ? null : (values.size() == 1 ? values.iterator().next() : values);
-				if (name.toLowerCase(Locale.ROOT).equals(HttpHeaders.CONTENT_TYPE.toLowerCase(Locale.ROOT))) {
-					name = MessageHeaders.CONTENT_TYPE;
-				}
-				map.put(name, value);
-			}
-			return new MessageHeaders(map);
-		}
-
-		private static Collection<?> multi(Object value) {
-			return value instanceof Collection ? (Collection<?>) value : Arrays.asList(value);
-		}
-
 	}
 
 }

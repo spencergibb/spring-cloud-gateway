@@ -111,9 +111,7 @@ public class StreamHandlerTests {
 
 		@Bean
 		public Consumer<String> consumeHello(AtomicBoolean helloConsumed) {
-			return message -> {
-				helloConsumed.compareAndSet(false, true);
-			};
+			return message -> helloConsumed.compareAndSet(false, true);
 		}
 
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2020 the original author or authors.
+ * Copyright 2013-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,21 @@
 package org.springframework.cloud.gateway.filter;
 
 import java.net.URI;
-import java.util.Locale;
-import java.util.function.Function;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
+import org.testcontainers.containers.RabbitMQContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.cloud.gateway.test.BaseWebClientTests;
@@ -40,21 +47,35 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  * @author Spencer Gibb
  */
 @SpringBootTest(webEnvironment = RANDOM_PORT,
-		properties = { "debug=false", "spring.cloud.function.definition=upper", "spring.codec.max-in-memory-size=40" })
-public class FunctionRoutingFilterTests extends BaseWebClientTests {
+		properties = { "debug=false", "spring.cloud.function.definition=consumeHello",
+				"spring.cloud.stream.bindings.consumeHello-in-0.destination=hello-out-0" })
+@Testcontainers
+public class StreamRoutingFilterTests extends BaseWebClientTests {
+
+	@Container
+	@ServiceConnection
+	public static RabbitMQContainer rabbitmq = new RabbitMQContainer("rabbitmq:3.7.25-management-alpine");
+
+	@Autowired
+	private AtomicBoolean helloConsumed;
 
 	@Test
-	public void functionRoutingFilterWorks() {
+	public void streamRoutingFilterWorks() {
+		helloConsumed.set(false);
+
 		URI uri = UriComponentsBuilder.fromUriString(this.baseUri + "/").build(true).toUri();
 
 		testClient.post()
 			.uri(uri)
 			.bodyValue("hello")
-			.header("Host", "www.functionroutingfilterjava.org")
+			.header("Host", "www.streamroutingfilterjava.org")
 			.accept(MediaType.TEXT_PLAIN)
 			.exchange()
-			.expectBody(String.class)
-			.consumeWith(res -> assertThat(res.getResponseBody()).isEqualTo("HELLO"));
+			.expectStatus()
+			.isOk();
+
+		Awaitility.await().atMost(5, TimeUnit.SECONDS).until(() -> helloConsumed.get());
+		assertThat(helloConsumed).isTrue();
 	}
 
 	@EnableAutoConfiguration
@@ -63,16 +84,21 @@ public class FunctionRoutingFilterTests extends BaseWebClientTests {
 	public static class TestConfig {
 
 		@Bean
-		Function<String, String> upper() {
-			return s -> s.toUpperCase(Locale.ROOT);
+		public RouteLocator testRouteLocator(RouteLocatorBuilder builder) {
+			return builder.routes()
+				.route("stream_routing_filter_java_test",
+						r -> r.path("/").and().host("www.streamroutingfilterjava.org").uri("stream://hello-out-0"))
+				.build();
 		}
 
 		@Bean
-		public RouteLocator testRouteLocator(RouteLocatorBuilder builder) {
-			return builder.routes()
-				.route("function_routing_filter_java_test",
-						r -> r.path("/").and().host("www.functionroutingfilterjava.org").uri("fn://upper"))
-				.build();
+		public AtomicBoolean helloConsumed() {
+			return new AtomicBoolean(false);
+		}
+
+		@Bean
+		public Consumer<String> consumeHello(AtomicBoolean helloConsumed) {
+			return message -> helloConsumed.compareAndSet(false, true);
 		}
 
 	}

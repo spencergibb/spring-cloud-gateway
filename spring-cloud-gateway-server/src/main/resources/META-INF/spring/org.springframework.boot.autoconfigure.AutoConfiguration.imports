@@ -5,6 +5,7 @@ org.springframework.cloud.gateway.config.GatewayNoLoadBalancerClientAutoConfigur
 org.springframework.cloud.gateway.config.GatewayFunctionAutoConfiguration
 org.springframework.cloud.gateway.config.GatewayMetricsAutoConfiguration
 org.springframework.cloud.gateway.config.GatewayRedisAutoConfiguration
+org.springframework.cloud.gateway.config.GatewayStreamAutoConfiguration
 org.springframework.cloud.gateway.discovery.GatewayDiscoveryClientAutoConfiguration
 org.springframework.cloud.gateway.config.SimpleUrlHandlerMappingGlobalCorsAutoConfiguration
 org.springframework.cloud.gateway.config.GatewayReactiveLoadBalancerClientAutoConfiguration
