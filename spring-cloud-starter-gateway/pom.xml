@@ -11,6 +11,7 @@
 	</parent>
 	<artifactId>spring-cloud-starter-gateway</artifactId>
 	<name>spring-cloud-starter-gateway</name>
+	<packaging>jar</packaging>
 	<description>Spring Cloud Starter</description>
 	<url>https://projects.spring.io/spring-cloud</url>
 	<organization>

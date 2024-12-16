@@ -131,7 +131,11 @@
 		<module>spring-cloud-gateway-webflux</module>
 		<module>spring-cloud-gateway-server</module>
 		<module>spring-cloud-gateway-server-mvc</module>
+		<module>spring-cloud-starter-gateway-server-webflux</module>
+		<module>spring-cloud-starter-gateway-server-webmvc</module>
+		<!-- Deprecated -->
 		<module>spring-cloud-starter-gateway</module>
+		<!-- Deprecated -->
 		<module>spring-cloud-starter-gateway-mvc</module>
 		<module>spring-cloud-gateway-sample</module>
 		<module>spring-cloud-gateway-integration-tests</module>

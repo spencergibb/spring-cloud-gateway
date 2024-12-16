@@ -26,10 +26,13 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.cloud.client.DefaultServiceInstance;
 import org.springframework.cloud.gateway.config.GatewayMetricsProperties;
@@ -52,6 +55,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  */
 @SpringBootTest(classes = { GatewaySampleApplicationTests.TestConfig.class }, webEnvironment = RANDOM_PORT,
 		properties = { "management.endpoint.gateway.enabled=true", "management.server.port=${test.port}" })
+@ExtendWith(OutputCaptureExtension.class)
 public class GatewaySampleApplicationTests {
 
 	protected static int managementPort;
@@ -257,6 +261,11 @@ public class GatewaySampleApplicationTests {
 					throw new IllegalStateException(e);
 				}
 			});
+	}
+
+	@Test
+	void usesNewStarter(CapturedOutput output) {
+		assertThat(output).doesNotContain("spring-cloud-starter-gateway is deprecated");
 	}
 
 	@Configuration(proxyBeanMethods = false)

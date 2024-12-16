@@ -11,7 +11,8 @@
 	</parent>
 	<artifactId>spring-cloud-starter-gateway-mvc</artifactId>
 	<name>spring-cloud-starter-gateway-mvc</name>
-	<description>Spring Cloud Gateway MVC</description>
+	<packaging>jar</packaging>
+	<description>Spring Cloud Gateway Starter MVC</description>
 	<url>https://projects.spring.io/spring-cloud</url>
 	<organization>
 		<name>Pivotal Software, Inc.</name>
