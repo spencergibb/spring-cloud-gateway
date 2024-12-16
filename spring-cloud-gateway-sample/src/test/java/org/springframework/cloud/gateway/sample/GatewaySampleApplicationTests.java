@@ -265,7 +265,8 @@ public class GatewaySampleApplicationTests {
 
 	@Test
 	void usesNewStarter(CapturedOutput output) {
-		assertThat(output).doesNotContain("spring-cloud-starter-gateway is deprecated");
+		assertThat(output).doesNotContain("spring-cloud-starter-gateway is deprecated")
+			.doesNotContain("spring-cloud-gateway-server is deprecated");
 	}
 
 	@Configuration(proxyBeanMethods = false)

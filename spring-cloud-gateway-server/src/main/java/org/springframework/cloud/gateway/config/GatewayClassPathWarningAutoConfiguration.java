@@ -59,4 +59,16 @@ public class GatewayClassPathWarningAutoConfiguration {
 
 	}
 
+	@Configuration(proxyBeanMethods = false)
+	@ConditionalOnMissingClass("org.springframework.cloud.gateway.server.webflux.Marker")
+	protected static class NewModuleConfiguration {
+
+		public NewModuleConfiguration() {
+			log.warn(BORDER + "The artifact spring-cloud-gateway-server is deprecated. "
+					+ "It will be removed in the next major release. "
+					+ "Please add spring-cloud-gateway-server-webflux dependency." + BORDER);
+		}
+
+	}
+
 }

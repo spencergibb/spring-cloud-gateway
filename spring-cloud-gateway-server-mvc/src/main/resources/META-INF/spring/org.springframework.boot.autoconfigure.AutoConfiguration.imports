@@ -1,3 +1,4 @@
 org.springframework.cloud.gateway.server.mvc.GatewayServerMvcAutoConfiguration
+org.springframework.cloud.gateway.server.mvc.GatewayMvcClassPathWarningAutoConfiguration
 org.springframework.cloud.gateway.server.mvc.handler.GatewayMultipartAutoConfiguration
 org.springframework.boot.autoconfigure.web.client.RestClientAutoConfiguration

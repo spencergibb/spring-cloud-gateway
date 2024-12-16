@@ -10,7 +10,7 @@
 		<relativePath>..</relativePath> <!-- lookup parent from repository -->
 	</parent>
 	<artifactId>spring-cloud-starter-gateway-server-webflux</artifactId>
-	<name>spring-cloud-starter-gateway</name>
+	<name>spring-cloud-starter-gateway-server-webflux</name>
 	<description>Spring Cloud Starter Gateway Server WebFlux</description>
 	<url>https://projects.spring.io/spring-cloud</url>
 	<organization>
@@ -27,7 +27,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-gateway-server</artifactId>
+			<artifactId>spring-cloud-gateway-server-webflux</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

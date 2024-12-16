@@ -22,24 +22,38 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<!-- Deprecated -->
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-gateway-webflux</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<!-- Deprecated -->
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-gateway-mvc</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<!-- Deprecated -->
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-gateway-server</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<!-- Deprecated -->
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-gateway-server-mvc</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-gateway-server-webflux</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-gateway-server-webmvc</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
@@ -58,6 +72,7 @@
 				<artifactId>spring-cloud-starter-gateway</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<!-- Deprecated -->
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-starter-gateway-mvc</artifactId>
