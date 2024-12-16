@@ -25,6 +25,7 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -32,6 +33,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.cloud.gateway.webflux.ProductionConfigurationTests.TestApplication;
@@ -62,6 +65,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(properties = { "spring.cloud.gateway.proxy.skipped=host" }, webEnvironment = WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = TestApplication.class)
 @DirtiesContext
+@ExtendWith(OutputCaptureExtension.class)
 public class ProductionConfigurationTests {
 
 	@Autowired
@@ -274,6 +278,11 @@ public class ProductionConfigurationTests {
 				new HttpEntity<Foo>(foo), returnType, Collections.singletonMap("id", "123"));
 		assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
 		assertThat(deleteResponse.getBody().get("deleted")).usingRecursiveComparison().isEqualTo(foo);
+	}
+
+	@Test
+	void logsArtifactDeprecatedWarning(CapturedOutput output) {
+		assertThat(output).contains("spring-cloud-gateway-webflux is deprecated");
 	}
 
 	@SpringBootApplication

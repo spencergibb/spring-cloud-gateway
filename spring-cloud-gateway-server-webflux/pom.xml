@@ -11,6 +11,7 @@
 	</parent>
 	<artifactId>spring-cloud-gateway-server-webflux</artifactId>
 	<name>spring-cloud-gateway-server-webflux</name>
+	<packaging>jar</packaging>
 	<description>Spring Cloud Gateway Server WebFlux</description>
 	<url>https://projects.spring.io/spring-cloud</url>
 	<organization>

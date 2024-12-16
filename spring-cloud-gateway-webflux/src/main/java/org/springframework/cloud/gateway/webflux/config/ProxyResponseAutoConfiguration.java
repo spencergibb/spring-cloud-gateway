@@ -20,9 +20,13 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.gateway.webflux.ProxyExchange;
@@ -43,7 +47,7 @@ import org.springframework.web.reactive.result.method.annotation.ArgumentResolve
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnWebApplication
-@ConditionalOnClass({ HandlerMethodReturnValueHandler.class })
+@ConditionalOnClass({ HandlerMethodReturnValueHandler.class, WebClient.class })
 @EnableConfigurationProperties(ProxyProperties.class)
 public class ProxyResponseAutoConfiguration implements WebFluxConfigurer {
 
@@ -74,6 +78,22 @@ public class ProxyResponseAutoConfiguration implements WebFluxConfigurer {
 	public void configureArgumentResolvers(ArgumentResolverConfigurer configurer) {
 		WebFluxConfigurer.super.configureArgumentResolvers(configurer);
 		configurer.addCustomResolver(context.getBean(ProxyExchangeArgumentResolver.class));
+	}
+
+	@Configuration(proxyBeanMethods = false)
+	@ConditionalOnMissingClass("org.springframework.cloud.gateway.proxyexchange.webflux.Marker")
+	protected static class NewModuleConfiguration {
+
+		private static final Log log = LogFactory.getLog(ProxyResponseAutoConfiguration.class);
+
+		private static final String BORDER = "\n\n**********************************************************\n\n";
+
+		public NewModuleConfiguration() {
+			log.warn(BORDER + "The artifact spring-cloud-gateway-webflux is deprecated. "
+					+ "It will be removed in the next major release. "
+					+ "Please add spring-cloud-gateway-proxyexchange-webflux dependency." + BORDER);
+		}
+
 	}
 
 }

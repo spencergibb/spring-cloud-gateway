@@ -25,11 +25,14 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.cloud.gateway.mvc.ProductionConfigurationTests.TestApplication;
@@ -59,6 +62,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = TestApplication.class)
+@ExtendWith(OutputCaptureExtension.class)
 public class ProductionConfigurationTests {
 
 	@Autowired
@@ -323,6 +327,11 @@ public class ProductionConfigurationTests {
 		assertThat(headers).containsKey("forwarded");
 		assertThat(headers.get("forwarded").size()).isEqualTo(1);
 		assertThat(headers.get("forwarded").get(0)).isEqualTo("host=localhost:" + port);
+	}
+
+	@Test
+	void logsArtifactDeprecatedWarning(CapturedOutput output) {
+		assertThat(output).contains("spring-cloud-gateway-mvc is deprecated");
 	}
 
 	@SpringBootApplication
