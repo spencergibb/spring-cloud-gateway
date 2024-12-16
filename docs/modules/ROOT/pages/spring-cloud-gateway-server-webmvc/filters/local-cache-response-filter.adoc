@@ -8,7 +8,7 @@ This filter allows caching the response body and headers to follow these rules:
 * Response data is not cached if `Cache-Control` header does not allow it (`no-store` present in the request or `no-store` or `private` present in the response).
 * If the response is already cached and a new request is performed with no-cache value in `Cache-Control` header, it returns a bodiless response with 304 (Not Modified).
 
-This filter configures the local response cache per route and is available only if the `spring.cloud.gateway.filter.local-response-cache.enabled` property is enabled. And a xref:spring-cloud-gateway/global-filters.adoc#local-cache-response-global-filter[local response cache configured globally] is also available as feature.
+This filter configures the local response cache per route and is available only if the `spring.cloud.gateway.filter.local-response-cache.enabled` property is enabled. And a xref:spring-cloud-gateway-server-webflux/global-filters.adoc#local-cache-response-global-filter[local response cache configured globally] is also available as feature.
 
 It accepts the first parameter to override the time to expire a cache entry (expressed in `s` for seconds, `m` for minutes, and `h` for hours) and a second parameter to set the maximum size of the cache to evict entries for this route (`KB`, `MB`, or `GB`).
 

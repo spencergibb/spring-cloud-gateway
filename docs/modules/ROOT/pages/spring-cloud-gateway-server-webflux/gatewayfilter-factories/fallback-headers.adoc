@@ -39,5 +39,5 @@ You can overwrite the names of the headers in the configuration by setting the v
 * `rootCauseExceptionTypeHeaderName` (`"Root-Cause-Exception-Type"`)
 * `rootCauseExceptionMessageHeaderName` (`"Root-Cause-Exception-Message"`)
 
-For more information on circuit breakers and the gateway see the xref:spring-cloud-gateway/gatewayfilter-factories/circuitbreaker-filter-factory.adoc[Spring Cloud CircuitBreaker Factory section].
+For more information on circuit breakers and the gateway see the xref:spring-cloud-gateway-server-webflux/gatewayfilter-factories/circuitbreaker-filter-factory.adoc[Spring Cloud CircuitBreaker Factory section].
 

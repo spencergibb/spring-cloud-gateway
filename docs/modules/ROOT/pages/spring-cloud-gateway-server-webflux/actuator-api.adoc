@@ -95,13 +95,13 @@ This will default to `true` in a future release.
 
 This section details how to retrieve route filters, including:
 
-* xref:spring-cloud-gateway/actuator-api.adoc#gateway-global-filters[Global Filters]
+* xref:spring-cloud-gateway-server-webflux/actuator-api.adoc#gateway-global-filters[Global Filters]
 * <<gateway-route-filters>>
 
 [[gateway-global-filters]]
 === Global Filters
 
-To retrieve the xref:spring-cloud-gateway/global-filters.adoc[global filters] applied to all routes, make a `GET` request to `/actuator/gateway/globalfilters`. The resulting response is similar to the following:
+To retrieve the xref:spring-cloud-gateway-server-webflux/global-filters.adoc[global filters] applied to all routes, make a `GET` request to `/actuator/gateway/globalfilters`. The resulting response is similar to the following:
 
 ----
 {
@@ -117,11 +117,11 @@ To retrieve the xref:spring-cloud-gateway/global-filters.adoc[global filters] ap
 ----
 
 The response contains the details of the global filters that are in place.
-For each global filter, there is a string representation of the filter object (for example, `org.springframework.cloud.gateway.filter.ReactiveLoadBalancerClientFilter@77856cc5`) and the corresponding xref:spring-cloud-gateway/global-filters.adoc#gateway-combined-global-filter-and-gatewayfilter-ordering[order] in the filter chain.
+For each global filter, there is a string representation of the filter object (for example, `org.springframework.cloud.gateway.filter.ReactiveLoadBalancerClientFilter@77856cc5`) and the corresponding xref:spring-cloud-gateway-server-webflux/global-filters.adoc#gateway-combined-global-filter-and-gatewayfilter-ordering[order] in the filter chain.
 
 [[gateway-route-filters]]
 === Route Filters
-To retrieve the xref:spring-cloud-gateway/gatewayfilter-factories.adoc[`GatewayFilter` factories] applied to routes, make a `GET` request to `/actuator/gateway/routefilters`.
+To retrieve the xref:spring-cloud-gateway-server-webflux/gatewayfilter-factories.adoc[`GatewayFilter` factories] applied to routes, make a `GET` request to `/actuator/gateway/routefilters`.
 The resulting response is similar to the following:
 
 ----
@@ -215,7 +215,7 @@ The following table describes the structure of each element (each is a route) of
 
 |`route_object.filters`
 | Array
-| The xref:spring-cloud-gateway/gatewayfilter-factories.adoc[`GatewayFilter` factories] applied to the route.
+| The xref:spring-cloud-gateway-server-webflux/gatewayfilter-factories.adoc[`GatewayFilter` factories] applied to the route.
 
 |`order`
 | Number
@@ -273,14 +273,14 @@ The following table describes the structure of the response:
 [[creating-and-deleting-a-particular-route-definition]]
 == Creating and Deleting a Particular Route Definition
 
-To create a route definition, make a `POST` request to `/gateway/routes/\{id_route_to_create}` with a JSON body that specifies the fields of the route (see xref:spring-cloud-gateway/actuator-api.adoc#gateway-retrieving-information-about-a-particular-route[Retrieving Information about a Particular Route]).
+To create a route definition, make a `POST` request to `/gateway/routes/\{id_route_to_create}` with a JSON body that specifies the fields of the route (see xref:spring-cloud-gateway-server-webflux/actuator-api.adoc#gateway-retrieving-information-about-a-particular-route[Retrieving Information about a Particular Route]).
 
 To delete a route definition, make a `DELETE` request to `/gateway/routes/\{id_route_to_delete}`.
 
 [[creating-multiple-route-definitions]]
 == Creating multiple Route Definitions
 
-To create multiple route definitions in a single request, make a `POST` request to `/gateway/routes` with a JSON body that specifies the fields of the route, including the route id (see xref:spring-cloud-gateway/actuator-api.adoc#gateway-retrieving-information-about-a-particular-route[Retrieving Information about a Particular Route]).
+To create multiple route definitions in a single request, make a `POST` request to `/gateway/routes` with a JSON body that specifies the fields of the route, including the route id (see xref:spring-cloud-gateway-server-webflux/actuator-api.adoc#gateway-retrieving-information-about-a-particular-route[Retrieving Information about a Particular Route]).
 
 The route definitions will be discarded if any route raises an error during the creation of the routes.
 

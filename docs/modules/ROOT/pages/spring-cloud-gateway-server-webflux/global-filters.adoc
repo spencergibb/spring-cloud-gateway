@@ -12,7 +12,7 @@ NOTE: This interface and its usage are subject to change in future milestone rel
 When a request matches a route, the filtering web handler adds all instances of `GlobalFilter` and all route-specific instances of `GatewayFilter` to a filter chain.
 This combined filter chain is sorted by the `org.springframework.core.Ordered` interface, which you can set by implementing the `getOrder()` method.
 
-As Spring Cloud Gateway distinguishes between "`pre`" and "`post`" phases for filter logic execution (see xref:spring-cloud-gateway/how-it-works.adoc[How it Works]), the filter with the highest precedence is the first in the "`pre`"-phase and the last in the "`post`"-phase.
+As Spring Cloud Gateway distinguishes between "`pre`" and "`post`" phases for filter logic execution (see xref:spring-cloud-gateway-server-webflux/how-it-works.adoc[How it Works]), the filter with the highest precedence is the first in the "`pre`"-phase and the last in the "`post`"-phase.
 
 The following listing configures a filter chain:
 
@@ -86,7 +86,7 @@ This filter also implements the automatic calculation of the `max-age` value in 
 If `max-age` is present on the original response, the value is rewritten with the number of seconds set in the `timeToLive` configuration parameter.
 In subsequent calls, this value is recalculated with the number of seconds left until the response expires.
 
-Setting `spring.cloud.gateway.global-filter.local-response-cache.enabled` to `false` deactivate the local response cache for all routes, the xref:spring-cloud-gateway/gatewayfilter-factories/local-cache-response-filter.adoc[LocalResponseCache filter] allows to use this functionality at route level.
+Setting `spring.cloud.gateway.global-filter.local-response-cache.enabled` to `false` deactivate the local response cache for all routes, the xref:spring-cloud-gateway-server-webflux/gatewayfilter-factories/local-cache-response-filter.adoc[LocalResponseCache filter] allows to use this functionality at route level.
 
 NOTE: To enable this feature, add `com.github.ben-manes.caffeine:caffeine` and `spring-boot-starter-cache` as project dependencies.
 

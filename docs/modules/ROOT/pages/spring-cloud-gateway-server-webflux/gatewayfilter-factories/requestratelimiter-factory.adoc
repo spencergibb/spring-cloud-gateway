@@ -3,7 +3,7 @@
 
 The `RequestRateLimiter` `GatewayFilter` factory uses a `RateLimiter` implementation to determine if the current request is allowed to proceed. If it is not, a status of `HTTP 429 - Too Many Requests` (by default) is returned.
 
-This filter takes an optional `keyResolver` parameter and parameters specific to the rate limiter (described xref:spring-cloud-gateway/gatewayfilter-factories/requestratelimiter-factory.adoc#key-resolver-section[later in this section]).
+This filter takes an optional `keyResolver` parameter and parameters specific to the rate limiter (described xref:spring-cloud-gateway-server-webflux/gatewayfilter-factories/requestratelimiter-factory.adoc#key-resolver-section[later in this section]).
 
 `keyResolver` is a bean that implements the `KeyResolver` interface.
 In configuration, reference the bean by name using SpEL.

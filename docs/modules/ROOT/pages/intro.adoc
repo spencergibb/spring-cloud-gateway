@@ -1,10 +1,9 @@
 [[introduction]]
 = Spring Cloud Gateway
-// TODO: docs, rework intro for 4 modules
 
 This project provides an API Gateway built on top of the Spring Ecosystem, including: Spring 6, Spring Boot 3 and Project Reactor. Spring Cloud Gateway aims to provide a simple, yet effective way to route to APIs and provide cross cutting concerns to them such as: security, monitoring/metrics, and resiliency.
 
-There are two distinct flavors of Spring Cloud Gateway: *Server* and *Proxy Exchange*. Each flavor offers WebFlux and MVC compatibility.
+There are two distinct flavors of Spring Cloud Gateway: *Server* and *Proxy Exchange*. Each flavor offers WebFlux and Web MVC compatibility.
 
 - The Server variant is a full-featured API gateway that can be standalone or embedded in a Spring Boot application.
-- The Proxy Exchange variant is exclusively for use in annotation based WebFlux or MVC applications and allows the use of a special `ProxyExchange` object as a parameter to a web handler method.
+- The Proxy Exchange variant is exclusively for use in annotation based WebFlux or Web MVC applications and allows the use of a special `ProxyExchange` object as a parameter to a web handler method.

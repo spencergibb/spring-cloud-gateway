@@ -1,11 +1,11 @@
 [[proxy-exchange-gateway]]
-= Proxy Exchange Gateway with Spring MVC or Webflux
+= Proxy Exchange Gateway with Spring Web MVC or WebFlux
 
 WARNING: The following describes an alternative style gateway. None of the Spring Cloud Gateway Server documentation applies to what follows.
 
 == How to Include Spring Cloud Gateway Proxy Exchange
 
-To include Spring Cloud Gateway Proxy Exchange in your project, use the artifact with a group ID of `org.springframework.cloud` and an artifact ID of `spring-cloud-gateway-mvc` for the MVC Proxy Exchange. For the WebFlux Proxy Exchange use artifact with a group ID of `org.springframework.cloud` and an artifact ID of `spring-cloud-gateway-webflux`.
+To include Spring Cloud Gateway Proxy Exchange in your project, use the artifact with a group ID of `org.springframework.cloud` and an artifact ID of `spring-cloud-gateway-proxyexchange-webmvc` for the MVC Proxy Exchange. For the WebFlux Proxy Exchange use artifact with a group ID of `org.springframework.cloud` and an artifact ID of `spring-cloud-gateway-proxyexchange-webflux`.
 
 See the https://projects.spring.io/spring-cloud/[Spring Cloud Project page] for details on setting up your build system with the current Spring Cloud Release Train.
 
@@ -15,7 +15,7 @@ Spring Cloud Gateway provides a utility object called `ProxyExchange`.
 You can use it inside a regular Spring web handler as a method parameter.
 It supports basic downstream HTTP exchanges through methods that mirror the HTTP verbs.
 With MVC, it also supports forwarding to a local handler through the `forward()` method.
-To use the `ProxyExchange`, include the right module in your classpath (either `spring-cloud-gateway-mvc` or `spring-cloud-gateway-webflux`).
+To use the `ProxyExchange`, include the right module in your classpath (either `spring-cloud-gateway-proxyexchange-webmvc` or `spring-cloud-gateway-proxyexchange-webflux`).
 
 The following MVC example proxies a request to `/test` downstream to a remote server:
 

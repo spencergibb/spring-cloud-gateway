@@ -155,7 +155,7 @@ In case of the request being forwarded to fallback, the Spring Cloud CircuitBrea
 It is added to the `ServerRequest` as the `MvcUtils.CIRCUITBREAKER_EXECUTION_EXCEPTION_ATTR` attribute that can be used when handling the fallback within the gateway application.
 
 For the external controller/handler scenario, headers can be added with exception details.
-You can find more information on doing so in  the xref:spring-cloud-gateway-server-mvc/filters/fallback-headers.adoc[FallbackHeaders Filters section].
+You can find more information on doing so in  the xref:spring-cloud-gateway-server-webmvc/filters/fallback-headers.adoc[FallbackHeaders Filters section].
 
 [[circuit-breaker-status-codes]]
 == Tripping The Circuit Breaker On Status Codes
